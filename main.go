@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"project-tiga/controller"
 	"project-tiga/middleware"
@@ -16,12 +17,20 @@ import (
 var (
 	db   *gorm.DB
 	PORT = os.Getenv("PORT")
+
+	DB_HOST     = os.Getenv("DB_HOST")
+	DB_PORT     = os.Getenv("DB_PORT")
+	DB_USERNAME = os.Getenv("DB_USERNAME")
+	DB_PASSWORD = os.Getenv("DB_PASSWORD")
+	DB_NAME     = os.Getenv("DB_NAME")
 )
 
 func init() {
 	var err error
 
-	db, err = gorm.Open(postgres.Open("host=containers-us-west-178.railway.app port=6798 user=postgres password=VAiHbJpUTI5uMIK3WwNG dbname=railway sslmode=disable"), &gorm.Config{})
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME)
+
+	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
