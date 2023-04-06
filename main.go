@@ -19,7 +19,7 @@ var (
 func init() {
 	var err error
 
-	db, err = gorm.Open(postgres.Open("host=localhost port=5432 user=postgres password=pswd dbname=postgres sslmode=disable"), &gorm.Config{})
+	db, err = gorm.Open(postgres.Open("host=containers-us-west-178.railway.app port=6798 user=postgres password=VAiHbJpUTI5uMIK3WwNG dbname=railway sslmode=disable"), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
