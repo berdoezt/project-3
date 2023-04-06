@@ -12,6 +12,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "project-tiga/docs"
 )
 
 var (
@@ -48,6 +53,16 @@ func init() {
 	db.Debug().AutoMigrate(model.User{}, model.Order{})
 }
 
+//	@title						Project 3 API
+//	@version					1.0
+//	@description				This is a project 3 API.
+//	@schemes					http
+//	@host						localhost:8084
+//	@accept						json
+//	@produce					json
+//	@securityDefinitions.apikey	BearerAuth
+//	@in							header
+//	@name						Authorization
 func main() {
 	orderRepository := repository.NewOrderRepository(db)
 	orderService := service.NewOrderService(orderRepository)
@@ -67,6 +82,8 @@ func main() {
 	orderGroup.POST("/", orderController.CreateOrder)
 	orderGroup.GET("/", orderController.GetListOrders)
 	orderGroup.GET("/:id", orderController.GetOrder)
+
+	g.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	err := g.Run(":" + PORT)
 	if err != nil {

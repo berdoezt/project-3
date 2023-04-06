@@ -7,7 +7,7 @@ type Order struct {
 }
 
 type OrderCreateRequest struct {
-	Price int `json:"price"`
+	Price int `json:"price" valid:"required~price is blank"`
 }
 
 type OrderCreateResponse struct {

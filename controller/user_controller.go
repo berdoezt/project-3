@@ -5,6 +5,7 @@ import (
 	"project-tiga/model"
 	"project-tiga/service"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,6 +37,18 @@ func (uc *UserController) Refresh(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// Login godoc
+//
+//	@Summary		login user
+//	@Description	login user using email and password
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		model.UserLoginRequest	true	"request is required"
+//	@Success		200		{object}	model.UserLoginResponse
+//	@Failure		400		{object}	model.MyError
+//	@Failure		500		{object}	model.MyError
+//	@Router			/user/login [post]
 func (uc *UserController) Login(ctx *gin.Context) {
 	var request model.UserLoginRequest
 
@@ -43,6 +56,21 @@ func (uc *UserController) Login(ctx *gin.Context) {
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, model.MyError{
 			Err: err.Error(),
+		})
+		return
+	}
+
+	valid, err := govalidator.ValidateStruct(request)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, model.MyError{
+			Err: err.Error(),
+		})
+		return
+	}
+
+	if !valid {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, model.MyError{
+			Err: "tidak valid",
 		})
 		return
 	}
@@ -58,6 +86,18 @@ func (uc *UserController) Login(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// Register godoc
+//
+//	@Summary		register a new user
+//	@Description	register a new user
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		model.UserRegisterRequest	true	"request is required"
+//	@Success		200		{object}	model.UserRegisterResponse
+//	@Failure		400		{object}	model.MyError
+//	@Failure		500		{object}	model.MyError
+//	@Router			/user/register [post]
 func (uc *UserController) Register(ctx *gin.Context) {
 	var request model.UserRegisterRequest
 

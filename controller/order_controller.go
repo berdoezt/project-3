@@ -5,6 +5,7 @@ import (
 	"project-tiga/model"
 	"project-tiga/service"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,12 +19,40 @@ func NewOrderController(orderService service.OrderService) *OrderController {
 	}
 }
 
+// CreateOrder godoc
+//
+//	@Summary		create order
+//	@Description	create order for a particular user
+//	@Tags			order
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		model.OrderCreateRequest	true	"request is required"
+//	@Success		200		{object}	model.OrderCreateResponse
+//	@Failure		400		{object}	model.MyError
+//	@Failure		500		{object}	model.MyError
+//	@Security		BearerAuth
+//	@Router			/order [post]
 func (oc *OrderController) CreateOrder(ctx *gin.Context) {
 	var request model.OrderCreateRequest
 	err := ctx.ShouldBindJSON(&request)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, model.MyError{
 			Err: err.Error(),
+		})
+		return
+	}
+
+	valid, err := govalidator.ValidateStruct(request)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, model.MyError{
+			Err: err.Error(),
+		})
+		return
+	}
+
+	if !valid {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, model.MyError{
+			Err: "tidak valid",
 		})
 		return
 	}

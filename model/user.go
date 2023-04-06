@@ -17,8 +17,8 @@ type UserRegisterResponse struct {
 }
 
 type UserLoginRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" valid:"required~email is blank"`
+	Password string `json:"password" valid:"required~password is blank"`
 }
 
 type UserLoginResponse struct {
