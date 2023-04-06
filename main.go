@@ -57,7 +57,7 @@ func main() {
 	orderGroup.GET("/", orderController.GetListOrders)
 	orderGroup.GET("/:id", orderController.GetOrder)
 
-	err := g.Run("localhost:8084")
+	err := g.Run(":8084")
 	if err != nil {
 		panic(err)
 	}
