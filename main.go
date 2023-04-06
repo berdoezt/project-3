@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"project-tiga/controller"
 	"project-tiga/middleware"
 	"project-tiga/model"
@@ -13,7 +14,8 @@ import (
 )
 
 var (
-	db *gorm.DB
+	db   *gorm.DB
+	PORT = os.Getenv("PORT")
 )
 
 func init() {
@@ -57,7 +59,7 @@ func main() {
 	orderGroup.GET("/", orderController.GetListOrders)
 	orderGroup.GET("/:id", orderController.GetOrder)
 
-	err := g.Run(":8084")
+	err := g.Run(":" + PORT)
 	if err != nil {
 		panic(err)
 	}
